@@ -1,7 +1,7 @@
 package com.github.kindrat.liquidfeedback.api.persistence.entity;
 
-import com.github.kindrat.liquidfeedback.api.dto.NotifyLevel;
-import com.github.kindrat.liquidfeedback.api.dto.MemberDto;
+import com.github.kindrat.liquidfeedback.api.endpoint.dto.NotifyLevel;
+import com.github.kindrat.liquidfeedback.api.endpoint.dto.MemberDto;
 import org.apache.commons.beanutils.BeanUtils;
 
 import javax.persistence.*;
@@ -10,12 +10,12 @@ import java.util.Date;
 
 @Entity(name = "Member")
 @Table(name = "member")
-public class Member implements BaseEntity<MemberDto> {
+public class Member extends BaseEntity<MemberDto> {
 
     private static final long serialVersionUID = 6441850877931072291L;
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false)
     private Integer id;
     @Column(name = "created")

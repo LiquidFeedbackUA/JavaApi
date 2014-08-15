@@ -1,20 +1,20 @@
 package com.github.kindrat.liquidfeedback.api.persistence.dao;
 
-import com.github.kindrat.liquidfeedback.api.dto.MemberRequestDto;
+import com.github.kindrat.liquidfeedback.api.endpoint.dto.MemberRequestDto;
 import com.github.kindrat.liquidfeedback.api.exceptions.DalException;
 import com.github.kindrat.liquidfeedback.api.persistence.entity.Member;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Component;
 
-import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import java.util.List;
 
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
+@Component
 public class MemberDao extends AbstractJpaDao<Member> {
 
-    public MemberDao(EntityManager entityManager) {
-        super(entityManager);
+    public MemberDao() {
         setClazz(Member.class);
     }
 

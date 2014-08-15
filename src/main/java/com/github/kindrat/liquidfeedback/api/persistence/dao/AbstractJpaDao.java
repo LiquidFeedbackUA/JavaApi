@@ -1,48 +1,47 @@
 package com.github.kindrat.liquidfeedback.api.persistence.dao;
 
+import com.github.kindrat.liquidfeedback.api.persistence.entity.BaseEntity;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import javax.persistence.EntityManager;
-import java.io.Serializable;
 import java.util.List;
 
-abstract class AbstractJpaDao<T extends Serializable> {
-    private Class<T> clazz;
-    private final EntityManager entityManager;
+abstract class AbstractJpaDao<ENTITY extends BaseEntity> {
+    private Class<ENTITY> clazz;
 
-    public AbstractJpaDao(EntityManager entityManager) {
-        this.entityManager = entityManager;
-    }
+    @Autowired
+    private EntityManager entityManager;
 
-    public void setClazz(Class<T> clazzToSet) {
+    public void setClazz(Class<ENTITY> clazzToSet) {
         this.clazz = clazzToSet;
     }
 
-    public T find(Long id) {
+    public ENTITY find(Long id) {
         return entityManager.find(this.clazz, id);
     }
 
-    @SuppressWarnings("unchecked")
-    public List<T> findAll() {
-        return (List<T>) entityManager.createQuery("from " + clazz.getName()).getResultList();
+    public List<ENTITY> findAll() {
+        return entityManager.createQuery("from " + clazz.getName(), clazz).getResultList();
     }
 
-    public T save(T entity) {
+    public ENTITY save(ENTITY entity) {
         begin();
         entityManager.persist(entity);
         return entity;
     }
 
-    public void update(T entity) {
+    public void update(ENTITY entity) {
         begin();
         entityManager.merge(entity);
     }
 
-    public void delete(T entity) {
+    public void delete(ENTITY entity) {
         begin();
         entityManager.remove(entity);
     }
 
     public void deleteById(Long entityId) {
-        T entity = find(entityId);
+        ENTITY entity = find(entityId);
         delete(entity);
     }
 

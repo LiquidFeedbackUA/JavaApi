@@ -1,6 +1,6 @@
 package com.github.kindrat.liquidfeedback.api.persistence.entity;
 
-import com.github.kindrat.liquidfeedback.api.dto.PolicyDto;
+import com.github.kindrat.liquidfeedback.api.endpoint.dto.PolicyDto;
 import org.apache.commons.beanutils.BeanUtils;
 import org.hibernate.annotations.Type;
 import org.joda.time.Period;
@@ -10,7 +10,7 @@ import java.lang.reflect.InvocationTargetException;
 
 @Entity(name = "Policy")
 @Table(name = "policy")
-public class Policy implements BaseEntity<PolicyDto> {
+public class Policy extends BaseEntity<PolicyDto> {
 
     private static final long serialVersionUID = 5606472168500346972L;
 

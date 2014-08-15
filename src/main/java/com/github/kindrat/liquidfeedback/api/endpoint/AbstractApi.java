@@ -1,27 +1,28 @@
 package com.github.kindrat.liquidfeedback.api.endpoint;
 
-import com.github.kindrat.liquidfeedback.api.AppContext;
-import com.github.kindrat.liquidfeedback.api.util.Convertible;
+import com.github.kindrat.liquidfeedback.api.context.AppContext;
+import com.github.kindrat.liquidfeedback.api.endpoint.dto.BaseDto;
+import com.github.kindrat.liquidfeedback.api.persistence.entity.BaseEntity;
+import com.github.kindrat.liquidfeedback.api.validation.RequestValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
-import javax.inject.Inject;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
-import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class AbstractApi<Dto extends Serializable, Entity extends Convertible<Dto>> {
+public abstract class AbstractApi<DTO extends BaseDto<ENTITY>, ENTITY extends BaseEntity<DTO>> {
 
     protected static final Logger LOGGER = LoggerFactory.getLogger(AbstractApi.class);
 
-    @Inject
+    @Autowired
     protected AppContext appContext;
 
     @Context
@@ -32,17 +33,28 @@ public abstract class AbstractApi<Dto extends Serializable, Entity extends Conve
         //TODO
     }
 
+    protected Response getResponse(ENTITY response) throws InvocationTargetException, IllegalAccessException {
+        return response == null ?
+                getResponse(null, null, Response.Status.NOT_FOUND) : getResponse(response.convertAndGet(), null, Response.Status.OK);
+    }
+
+    protected Response getResponse(ENTITY response, Response.Status code) throws InvocationTargetException, IllegalAccessException {
+        return getResponse(response.convertAndGet(), null, code);
+    }
+
     protected Response getResponse(Object response, Response.Status code) {
         return getResponse(response, null, code);
     }
 
-    protected Response getResponse(List<Entity> entities, Response.Status code) throws InvocationTargetException, IllegalAccessException {
-        return getResponse(convertToApiDto(entities), code);
+    protected Response getResponse(List<ENTITY> entities) throws InvocationTargetException, IllegalAccessException {
+        Response.Status code = entities.isEmpty() ? Response.Status.NOT_FOUND : Response.Status.OK;
+        return getResponse(entities, code);
     }
 
-    protected Response getResponse(List<Entity> entities) throws InvocationTargetException, IllegalAccessException {
-        List<Dto> dtoList = convertToApiDto(entities);
-        Response.Status code = dtoList.isEmpty() ? Response.Status.NOT_FOUND : Response.Status.OK;
+    protected Response getResponse(List<ENTITY> entities, Response.Status code) throws InvocationTargetException, IllegalAccessException {
+        LOGGER.debug("Converting entities : {}", entities);
+        List<DTO> dtoList = convertToApiDto(entities);
+        LOGGER.debug("Sending dtos : {} with status {}", dtoList, code);
         return getResponse(dtoList, code);
     }
 
@@ -67,11 +79,13 @@ public abstract class AbstractApi<Dto extends Serializable, Entity extends Conve
         return webServiceResponseBuilder.build();
     }
 
-    protected List<Dto> convertToApiDto(List<Entity> entities) throws InvocationTargetException, IllegalAccessException {
-        List<Dto> dtoList = new ArrayList<>(entities.size());
-        for (Entity entity : entities) {
+    protected List<DTO> convertToApiDto(List<ENTITY> entities) throws InvocationTargetException, IllegalAccessException {
+        List<DTO> dtoList = new ArrayList<>(entities.size());
+        for (ENTITY entity : entities) {
             dtoList.add(entity.convertAndGet());
         }
         return dtoList;
     }
+
+    protected abstract RequestValidator<DTO, ENTITY> getValidator();
 }

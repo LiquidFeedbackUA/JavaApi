@@ -1,4 +1,4 @@
-package com.github.kindrat.liquidfeedback.api.dto;
+package com.github.kindrat.liquidfeedback.api.endpoint.dto;
 
 import java.io.Serializable;
 import java.util.Set;

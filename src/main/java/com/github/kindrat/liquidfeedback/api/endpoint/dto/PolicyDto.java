@@ -1,14 +1,13 @@
-package com.github.kindrat.liquidfeedback.api.dto;
+package com.github.kindrat.liquidfeedback.api.endpoint.dto;
 
-import com.github.kindrat.liquidfeedback.api.dto.ApiDto;
 import com.github.kindrat.liquidfeedback.api.persistence.entity.Policy;
 import org.apache.commons.beanutils.BeanUtils;
 import org.joda.time.Period;
 
 import java.lang.reflect.InvocationTargetException;
 
-public class PolicyDto implements ApiDto<Policy> {
-
+public class PolicyDto extends BaseDto<Policy>
+{
     private static final long serialVersionUID = -1854247019203052795L;
 
     private Integer id;

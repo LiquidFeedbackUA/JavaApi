@@ -1,6 +1,5 @@
 package com.github.kindrat.liquidfeedback.api.endpoint;
 
-import com.github.kindrat.liquidfeedback.api.AppContext;
 import com.jayway.restassured.response.Response;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -29,10 +28,5 @@ public class PolicyApiTest extends AbstractApiTest{
                 .given()
                 .parameter("ids", Arrays.asList(1, 2, 3))
                 .get(policyUri);
-    }
-
-    @Override
-    protected AppContext createContext() {
-        return new AppContext();
     }
 }

@@ -1,15 +1,13 @@
-package com.github.kindrat.liquidfeedback.api.dto;
+package com.github.kindrat.liquidfeedback.api.endpoint.dto;
 
-import com.github.kindrat.liquidfeedback.api.dto.ApiDto;
-import com.github.kindrat.liquidfeedback.api.dto.NotifyLevel;
 import com.github.kindrat.liquidfeedback.api.persistence.entity.Member;
 import org.apache.commons.beanutils.BeanUtils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
 
-public class MemberDto implements ApiDto<Member> {
-
+public class MemberDto extends BaseDto<Member>
+{
     private static final long serialVersionUID = 2736798836292302053L;
 
     private Integer id;
