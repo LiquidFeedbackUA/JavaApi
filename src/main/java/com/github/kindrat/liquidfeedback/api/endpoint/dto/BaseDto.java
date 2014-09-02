@@ -5,7 +5,7 @@ import com.github.kindrat.liquidfeedback.api.util.Convertible;
 
 import java.io.Serializable;
 
-public abstract class BaseDto<ENTITY extends BaseEntity> implements Serializable, Convertible<ENTITY>{
+public abstract class BaseDto<ENTITY extends BaseEntity> implements Serializable, Convertible<ENTITY> {
 
-   public abstract String toString();
+    public abstract String toString();
 }

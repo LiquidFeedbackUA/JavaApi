@@ -1,13 +1,11 @@
 package com.github.kindrat.liquidfeedback.api.endpoint.dto;
 
+import com.github.kindrat.liquidfeedback.api.exceptions.EntityConversionException;
 import com.github.kindrat.liquidfeedback.api.persistence.entity.Policy;
-import org.apache.commons.beanutils.BeanUtils;
+import com.github.kindrat.liquidfeedback.api.util.ConvertUtil;
 import org.joda.time.Period;
 
-import java.lang.reflect.InvocationTargetException;
-
-public class PolicyDto extends BaseDto<Policy>
-{
+public class PolicyDto extends BaseDto<Policy> {
     private static final long serialVersionUID = -1854247019203052795L;
 
     private Integer id;
@@ -278,9 +276,7 @@ public class PolicyDto extends BaseDto<Policy>
     }
 
     @Override
-    public Policy convertAndGet() throws InvocationTargetException, IllegalAccessException {
-        Policy policy = new Policy();
-        BeanUtils.copyProperties(policy, this);
-        return policy;
+    public Policy convertAndGet() throws EntityConversionException {
+        return ConvertUtil.convert(this, Policy.class);
     }
 }

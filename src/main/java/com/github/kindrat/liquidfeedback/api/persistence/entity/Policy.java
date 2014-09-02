@@ -1,12 +1,12 @@
 package com.github.kindrat.liquidfeedback.api.persistence.entity;
 
 import com.github.kindrat.liquidfeedback.api.endpoint.dto.PolicyDto;
-import org.apache.commons.beanutils.BeanUtils;
+import com.github.kindrat.liquidfeedback.api.exceptions.EntityConversionException;
+import com.github.kindrat.liquidfeedback.api.util.ConvertUtil;
 import org.hibernate.annotations.Type;
 import org.joda.time.Period;
 
 import javax.persistence.*;
-import java.lang.reflect.InvocationTargetException;
 
 @Entity(name = "Policy")
 @Table(name = "policy")
@@ -29,16 +29,16 @@ public class Policy extends BaseEntity<PolicyDto> {
     @Column(nullable = false, columnDefinition = "boolean NOT NULL DEFAULT false")
     private Boolean polling;
     @Column(name = "admission_time")
-    @Type(type="com.github.kindrat.liquidfeedback.api.persistence.types.Interval")
+    @Type(type = "com.github.kindrat.liquidfeedback.api.persistence.types.Interval")
     private Period admissionTime;
     @Column(name = "discussion_time")
-    @Type(type="com.github.kindrat.liquidfeedback.api.persistence.types.Interval")
+    @Type(type = "com.github.kindrat.liquidfeedback.api.persistence.types.Interval")
     private Period discussionTime;
     @Column(name = "verification_time")
-    @Type(type="com.github.kindrat.liquidfeedback.api.persistence.types.Interval")
+    @Type(type = "com.github.kindrat.liquidfeedback.api.persistence.types.Interval")
     private Period verificationTime;
     @Column(name = "voting_time")
-    @Type(type="com.github.kindrat.liquidfeedback.api.persistence.types.Interval")
+    @Type(type = "com.github.kindrat.liquidfeedback.api.persistence.types.Interval")
     private Period votingTime;
     @Column(name = "issue_quorum_num")
     private Integer issueQuorumNum;
@@ -313,9 +313,7 @@ public class Policy extends BaseEntity<PolicyDto> {
                 '}';
     }
 
-    public PolicyDto convertAndGet() throws InvocationTargetException, IllegalAccessException {
-        PolicyDto dto = new PolicyDto();
-        BeanUtils.copyProperties(dto, this);
-        return dto;
+    public PolicyDto convertAndGet() throws EntityConversionException {
+        return ConvertUtil.convert(this, PolicyDto.class);
     }
 }

@@ -5,7 +5,7 @@ import org.springframework.web.context.support.AnnotationConfigWebApplicationCon
 public class AnnotationBasedContext extends AnnotationConfigWebApplicationContext {
 
     public AnnotationBasedContext() {
-        register(AppContext.class);
+        register(BasicContext.class, PersistenceJPAConfig.class, GlobalScanContext.class);
         refresh();
     }
 }

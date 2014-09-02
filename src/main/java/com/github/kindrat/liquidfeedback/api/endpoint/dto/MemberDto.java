@@ -1,13 +1,12 @@
 package com.github.kindrat.liquidfeedback.api.endpoint.dto;
 
+import com.github.kindrat.liquidfeedback.api.exceptions.EntityConversionException;
 import com.github.kindrat.liquidfeedback.api.persistence.entity.Member;
-import org.apache.commons.beanutils.BeanUtils;
+import com.github.kindrat.liquidfeedback.api.util.ConvertUtil;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
 
-public class MemberDto extends BaseDto<Member>
-{
+public class MemberDto extends BaseDto<Member> {
     private static final long serialVersionUID = 2736798836292302053L;
 
     private Integer id;
@@ -448,9 +447,7 @@ public class MemberDto extends BaseDto<Member>
     }
 
     @Override
-    public Member convertAndGet() throws InvocationTargetException, IllegalAccessException {
-        Member member = new Member();
-        BeanUtils.copyProperties(member, this);
-        return member;
+    public Member convertAndGet() throws EntityConversionException {
+        return ConvertUtil.convert(this, Member.class);
     }
 }

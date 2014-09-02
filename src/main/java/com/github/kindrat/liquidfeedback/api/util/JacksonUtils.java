@@ -75,7 +75,7 @@ public class JacksonUtils {
      * Constructs a parametric type.
      *
      * @param parametrizedClass the parametrized class
-     * @param parameterTypes     the parameter classes
+     * @param parameterTypes    the parameter classes
      * @return the parametric java type
      */
     public static <T> JavaType constructParametricType(Class<T> parametrizedClass, JavaType... parameterTypes) {

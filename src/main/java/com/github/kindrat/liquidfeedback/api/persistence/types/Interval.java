@@ -14,14 +14,13 @@ import java.sql.Types;
 import java.util.Date;
 
 public class Interval implements UserType {
-    private static final int[] SQL_TYPES = { Types.OTHER };
+    private static final int[] SQL_TYPES = {Types.OTHER};
 
     @Override
     public int[] sqlTypes() {
         return SQL_TYPES;
     }
 
-    @SuppressWarnings("rawtypes")
     @Override
     public Class returnedClass() {
         return Period.class;

@@ -1,9 +1,10 @@
 package com.github.kindrat.liquidfeedback.api.util;
 
+import com.github.kindrat.liquidfeedback.api.exceptions.EntityConversionException;
+
 import java.io.Serializable;
-import java.lang.reflect.InvocationTargetException;
 
 public interface Convertible<T extends Serializable> {
 
-    public T convertAndGet() throws InvocationTargetException, IllegalAccessException;
+    public T convertAndGet() throws EntityConversionException;
 }

@@ -9,7 +9,6 @@ public enum ConfigUtil {
     DB_USER("db.datasource.username"),
     DB_PASS("db.datasource.password"),
     DB_DRIVER("db.datasource.driver"),
-    DB_DIALECT("db.hibernate.dialect"),
     PERSISTENCE_UNIT("db.persistence.name"),
     PERSISTENCE_POOL("db.persistence.poolSize"),
     TEST_QUERY("db.persistence.testQuery");

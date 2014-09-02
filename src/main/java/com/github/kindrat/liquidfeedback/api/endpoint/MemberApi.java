@@ -1,58 +1,240 @@
 package com.github.kindrat.liquidfeedback.api.endpoint;
 
 import com.github.kindrat.liquidfeedback.api.endpoint.dto.MemberDto;
-import com.github.kindrat.liquidfeedback.api.endpoint.dto.MemberRequestDto;
-import com.github.kindrat.liquidfeedback.api.exceptions.DalException;
-import com.github.kindrat.liquidfeedback.api.persistence.dao.MemberDao;
+import com.github.kindrat.liquidfeedback.api.endpoint.dto.OrderType;
+import com.github.kindrat.liquidfeedback.api.exceptions.EntityConversionException;
+import com.github.kindrat.liquidfeedback.api.exceptions.EntityNotFoundException;
 import com.github.kindrat.liquidfeedback.api.persistence.entity.Member;
-import com.github.kindrat.liquidfeedback.api.validation.RequestValidator;
+import com.github.kindrat.liquidfeedback.api.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.lang.reflect.InvocationTargetException;
-import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-import static javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR;
+import static javax.ws.rs.core.Response.Status.NOT_FOUND;
+import static javax.ws.rs.core.Response.Status.OK;
 
 @Component
 @Path("/member")
 public class MemberApi extends AbstractApi<MemberDto, Member> {
 
     @Autowired
-    private MemberDao memberDao;
+    private MemberService service;
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getMembersByCriteria(
-            @QueryParam("ids") List<Integer> ids,
-            @QueryParam("active") Boolean useActive,
+    public Response getMembers(
+            @QueryParam("page") Integer page,
+            @QueryParam("pageSize") Short pageSize
+    ) throws EntityConversionException {
+        List<MemberDto> members = service.getPageStartingWithId(new PageRequest(page, pageSize));
+        return getResponse(members);
+    }
+
+    @GET
+    @Path("/search")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getMembers(
             @QueryParam("textSearch") String textSearch,
-            @QueryParam("useNameOrder") Boolean useNameOrder,
-            @QueryParam("useCreatedOrder") Boolean useCreatedOrder
-    ) throws InvocationTargetException, IllegalAccessException {
-        try {
-            MemberRequestDto dto = new MemberRequestDto(new HashSet<>(ids), textSearch, useActive, useNameOrder, useCreatedOrder);
-            List<Member> members = memberDao.getMembers(dto);
-            return getResponse(members);
-        } catch (DalException e) {
-            return getResponse(e, INTERNAL_SERVER_ERROR);
-        }
+            @QueryParam("page") Integer page,
+            @QueryParam("pageSize") Short pageSize
+    ) throws EntityConversionException {
+        return getResponse(NOT_FOUND);
     }
 
     @GET
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getMemberById(@PathParam("id") Long id) throws InvocationTargetException, IllegalAccessException {
-        Member member = memberDao.find(id);
-        return getResponse(member);
+    public Response getMemberById(@PathParam("id") Long id) throws EntityConversionException {
+        try {
+            MemberDto member = service.getById(id);
+            return getResponse(member, OK);
+        } catch (EntityNotFoundException e) {
+            return getResponse(NOT_FOUND);
+        }
     }
 
-    @Override
-    protected RequestValidator<MemberDto, Member> getValidator() {
-        return null;
+    @GET
+    @Path("/batch/{batch}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getMembers(@PathParam("batch") Set<Long> ids) {
+        return getResponse(NOT_FOUND);
+    }
+
+    @GET
+    @Path("/batch/{batch}/search")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getMembers(
+            @PathParam("batch") Set<Long> ids,
+            @QueryParam("textSearch") String textSearch
+            ) {
+        return getResponse(NOT_FOUND);
+    }
+
+    @GET
+    @Path("/active/{active}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getMembers(
+            @PathParam("active") Boolean isActive,
+            @QueryParam("page") Integer page,
+            @QueryParam("pageSize") Short pageSize
+    ) {
+        if (isActive) {
+            return getResponse(NOT_FOUND);
+        } else {
+            return getResponse(NOT_FOUND);
+        }
+    }
+
+    @GET
+    @Path("/active/{active}/search")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getMembers(
+            @PathParam("active") Boolean isActive,
+            @QueryParam("textSearch") String textSearch
+    ) {
+        if (isActive) {
+            return getResponse(NOT_FOUND);
+        } else {
+            return getResponse(NOT_FOUND);
+        }
+    }
+
+    @GET
+    @Path("/batch/{batch}/active/{active}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getMembers(
+            @PathParam("batch") Set<Long> ids,
+            @PathParam("active") Boolean isActive
+    ) {
+        if (isActive) {
+            return getResponse(NOT_FOUND);
+        } else {
+            return getResponse(NOT_FOUND);
+        }
+    }
+
+    @GET
+    @Path("/batch/{batch}/active/{active}/search")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getMembers(
+            @PathParam("batch") Set<Long> ids,
+            @PathParam("active") Boolean isActive,
+            @QueryParam("textSearch") String textSearch
+    ) {
+        if (isActive) {
+            return getResponse(NOT_FOUND);
+        } else {
+            return getResponse(NOT_FOUND);
+        }
+    }
+
+    @GET
+    @Path("/order/{order}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getMembers(
+            @PathParam("order") OrderType orderType,
+            @QueryParam("page") Integer page,
+            @QueryParam("pageSize") Short pageSize
+    ) {
+        return getResponse(NOT_FOUND);
+    }
+
+    @GET
+    @Path("/order/{order}/search")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getMembers(
+            @PathParam("order") OrderType orderType,
+            @QueryParam("textSearch") String textSearch
+    ) {
+        return getResponse(NOT_FOUND);
+    }
+
+    @GET
+    @Path("/batch/{batch}/order/{order}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getMembers(
+            @PathParam("batch") Set<Long> ids,
+            @PathParam("order") OrderType orderType
+    ) {
+        return getResponse(NOT_FOUND);
+    }
+
+    @GET
+    @Path("/batch/{batch}/order/{order}/search")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getMembers(
+            @PathParam("batch") Set<Long> ids,
+            @PathParam("order") OrderType orderType,
+            @QueryParam("textSearch") String textSearch
+    ) {
+        return getResponse(NOT_FOUND);
+    }
+
+    @GET
+    @Path("/active/{active}/order/{order}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getMembers(
+            @PathParam("active") Boolean isActive,
+            @PathParam("order") OrderType orderType,
+            @QueryParam("page") Integer page,
+            @QueryParam("pageSize") Short pageSize
+    ) {
+        if (isActive) {
+            return getResponse(NOT_FOUND);
+        } else {
+            return getResponse(NOT_FOUND);
+        }
+    }
+
+    @GET
+    @Path("/active/{active}/order/{order}/search")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getMembers(
+            @PathParam("active") Boolean isActive,
+            @PathParam("order") OrderType orderType,
+            @QueryParam("textSearch") String textSearch
+    ) {
+        if (isActive) {
+            return getResponse(NOT_FOUND);
+        } else {
+            return getResponse(NOT_FOUND);
+        }
+    }
+
+    @GET
+    @Path("/batch/{batch}/active/{active}/order/{order}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getMembers(
+            @PathParam("batch") Set<Long> ids,
+            @PathParam("active") Boolean isActive,
+            @PathParam("order") OrderType orderType
+    ) {
+        if (isActive) {
+            return getResponse(NOT_FOUND);
+        } else {
+            return getResponse(NOT_FOUND);
+        }
+    }
+
+    @GET
+    @Path("/batch/{batch}/active/{active}/order/{order}/search")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getMembers(
+            @PathParam("batch") Set<Long> ids,
+            @PathParam("active") Boolean isActive,
+            @PathParam("order") OrderType orderType,
+            @QueryParam("textSearch") String textSearch
+    ) {
+        if (isActive) {
+            return getResponse(NOT_FOUND);
+        } else {
+            return getResponse(NOT_FOUND);
+        }
     }
 }

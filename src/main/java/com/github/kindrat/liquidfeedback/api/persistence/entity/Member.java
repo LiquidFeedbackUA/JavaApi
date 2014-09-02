@@ -1,11 +1,11 @@
 package com.github.kindrat.liquidfeedback.api.persistence.entity;
 
-import com.github.kindrat.liquidfeedback.api.endpoint.dto.NotifyLevel;
 import com.github.kindrat.liquidfeedback.api.endpoint.dto.MemberDto;
-import org.apache.commons.beanutils.BeanUtils;
+import com.github.kindrat.liquidfeedback.api.endpoint.dto.NotifyLevel;
+import com.github.kindrat.liquidfeedback.api.exceptions.EntityConversionException;
+import com.github.kindrat.liquidfeedback.api.util.ConvertUtil;
 
 import javax.persistence.*;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
 
 @Entity(name = "Member")
@@ -508,9 +508,7 @@ public class Member extends BaseEntity<MemberDto> {
                 '}';
     }
 
-    public MemberDto convertAndGet() throws InvocationTargetException, IllegalAccessException {
-        MemberDto dto = new MemberDto();
-        BeanUtils.copyProperties(dto, this);
-        return dto;
+    public MemberDto convertAndGet() throws EntityConversionException {
+        return ConvertUtil.convert(this, MemberDto.class);
     }
 }

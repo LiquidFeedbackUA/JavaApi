@@ -4,6 +4,7 @@ import com.jayway.restassured.response.Response;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import java.io.IOException;
 import java.util.Arrays;
 
 import static com.jayway.restassured.RestAssured.expect;
@@ -14,10 +15,9 @@ public class UnitApiTest extends AbstractApiTest {
 
     @BeforeClass
     @Override
-    public void init()
-    {
+    public void init() throws IOException {
         super.init();
-        unitUrl = apiRootUri + "unit";
+        unitUrl = getServerUri() + "unit";
     }
 
     @Test

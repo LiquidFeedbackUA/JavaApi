@@ -8,8 +8,7 @@ import javax.ws.rs.ext.Provider;
 @Provider
 public class JsonProvider extends JacksonJaxbJsonProvider {
 
-    public JsonProvider()
-    {
+    public JsonProvider() {
         super();
         JodaMapper mapper = new JodaMapper();
         mapper.setWriteDatesAsTimestamps(false);
